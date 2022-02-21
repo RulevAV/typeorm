@@ -14,7 +14,7 @@ const createSub = async (req: Request, res: Response) => {
         if (isEmpty(name)) errors.name = "Name must not be empty"
         if (isEmpty(title)) errors.title = "Title must not be empty"
 
-        const sub = getRepository(Sub)
+        const sub = await getRepository(Sub)
             .createQueryBuilder('sub')
             .where('lower (sub.name) = :name', { name: name.toLowerCase() })
             .getOne();
@@ -29,7 +29,7 @@ const createSub = async (req: Request, res: Response) => {
     }
 
     try {
-        const sub = new Sub({ name, title, user })
+        const sub = new Sub({ name, description, title, user })
         await sub.save();
 
         return res.json(sub);

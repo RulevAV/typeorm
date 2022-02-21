@@ -1,39 +1,43 @@
-import { Entity as TOENTITY, Column, Index, BeforeInsert, ManyToOne, JoinColumn, OneToMany } from "typeorm";
-import { IsEmail, Length } from 'class-validator';
-import bcrypt from "bcrypt";
-import { Exclude } from "class-transformer";
-import Entity from "./Entity";
-import User from "./User";
-import { makeId, slugify } from "./utill/helpers";
-import { type } from "os";
-import Post from "./Post";
+import {
+    Entity as TOEntity,
+    Column,
+    Index,
+    ManyToOne,
+    JoinColumn,
+    OneToMany,
+} from 'typeorm'
 
-@TOENTITY('subs')
+import Entity from './Entity'
+import User from './User'
+import Post from './Post'
+
+@TOEntity('subs')
 export default class Sub extends Entity {
-    constructor(post: Partial<Sub>) {
+    constructor(sub: Partial<Sub>) {
         super()
-        Object.assign(this, post)
+        Object.assign(this, sub)
     }
+
     @Index()
-    @Column()
+    @Column({ unique: true })
     name: string
 
     @Column()
     title: string
 
-    @Column({ type: "text", nullable: true })
+    @Column({ type: 'text', nullable: true })
     description: string
 
-    @Column({ type: "text", nullable: true })
-    imageUrl: string
+    @Column({ nullable: true })
+    imageUrn: string
 
-    @Column({ type: "text", nullable: true })
+    @Column({ nullable: true })
     bannerUrn: string
 
     @ManyToOne(() => User)
-    @JoinColumn({ name: "username", referencedColumnName: "username" })
+    @JoinColumn({ name: 'username', referencedColumnName: 'username' })
     user: User
 
-    @OneToMany(() => Post, post => post.sub)
+    @OneToMany(() => Post, (post) => post.sub)
     posts: Post[]
-} 
+}
